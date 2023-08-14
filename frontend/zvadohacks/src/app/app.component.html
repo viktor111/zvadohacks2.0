@@ -1,0 +1,15 @@
+<header class="hacker-header">
+  <a [routerLink]="['/']" class="logo">ZvadoHacks</a>
+  <nav>
+    <a [routerLink]="['/blog']" routerLinkActive="active">Blog</a>
+    <a [routerLink]="['/hacks']" routerLinkActive="active">Hacks</a>
+    <a [routerLink]="['/snippets']" routerLinkActive="active">Snippets</a>
+    <a [routerLink]="['/manage']" routerLinkActive="active">Manage</a>
+  </nav>
+</header>
+
+
+<canvas id="matrixCanvas"></canvas>
+
+
+<router-outlet></router-outlet>
