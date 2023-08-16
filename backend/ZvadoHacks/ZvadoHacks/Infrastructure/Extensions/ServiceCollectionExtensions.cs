@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ZvadoHacks.Data;
 using ZvadoHacks.Data.Entities;
 using ZvadoHacks.Data.Repositories;
+using ZvadoHacks.Services;
 
 namespace ZvadoHacks.Infrastructure.Extensions
 {
@@ -18,6 +19,8 @@ namespace ZvadoHacks.Infrastructure.Extensions
 
         public static IServiceCollection ConfigureServices(this IServiceCollection serviceCollection)
         {
+            serviceCollection.AddScoped<IJwtTokenGeneratorService, JwtTokenGeneratorService>();
+
             return serviceCollection;
         }
 
