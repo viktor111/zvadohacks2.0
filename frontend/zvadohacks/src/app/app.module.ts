@@ -7,6 +7,8 @@ import { BlogComponent } from './blog/blog.component';
 import { SnippetsComponent } from './snippets/snippets.component';
 import { HacksComponent } from './hacks/hacks.component';
 import { ManageComponent } from './manage/manage.component';
+import { HttpClientModule } from '@angular/common/http'; 
+
 
 @NgModule({
   declarations: [
@@ -14,11 +16,12 @@ import { ManageComponent } from './manage/manage.component';
     BlogComponent,
     SnippetsComponent,
     HacksComponent,
-    ManageComponent
+    ManageComponent,  
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
