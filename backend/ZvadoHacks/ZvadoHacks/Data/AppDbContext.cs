@@ -12,6 +12,8 @@ namespace ZvadoHacks.Data
 
         public DbSet<BlogPost> BlogPosts { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
