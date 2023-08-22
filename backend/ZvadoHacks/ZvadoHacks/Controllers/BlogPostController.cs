@@ -21,6 +21,7 @@ namespace ZvadoHacks.Controllers
         }
 
         [HttpPost]
+        [JwtAuthorize]
         public async Task<IActionResult> Create(BlogPostCreateRequest blogPostCreateRequest)
         {
             var blogPost = await _blogPostRepository.Add(new BlogPost

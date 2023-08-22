@@ -20,6 +20,8 @@ namespace ZvadoHacks.Infrastructure.Extensions
         public static IServiceCollection ConfigureServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IJwtTokenGeneratorService, JwtTokenGeneratorService>();
+            serviceCollection.AddScoped<IPasswordManagerService, PasswordManagerService>();
+            serviceCollection.AddScoped<IAuthService, AuthService>();
 
             return serviceCollection;
         }
@@ -27,6 +29,7 @@ namespace ZvadoHacks.Infrastructure.Extensions
         public static IServiceCollection ConfigureRepositories(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IRepository<BlogPost>, BlogPostRepository>();
+            serviceCollection.AddScoped<IRepository<User>, UserRepository>();
 
             return serviceCollection;
         }
