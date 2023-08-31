@@ -81,7 +81,8 @@ namespace ZvadoHacks.Services
 
                 var user = await userRepository.FindOne(x => x.Id == userId);
 
-                await EmailClient.Send(user.Email, "Zvado Port Scan", "The port scan was compleated check back on your scans history!");
+                // ToDo: Fix email sending
+                // await EmailClient.Send(user.Email, "Zvado Port Scan", "The port scan was compleated check back on your scans history!");
 
                 scope.Dispose();
 
