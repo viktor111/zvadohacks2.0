@@ -1,4 +1,4 @@
-﻿using Euroins.Payment.Data.Repositories;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using ZvadoHacks.Data.Entities;
 using ZvadoHacks.Infrastructure.Extensions;
@@ -28,14 +28,32 @@ namespace ZvadoHacks.Controllers
             {
                 var authReponse = await _authService.Login(request);
 
-                response.SetData(authReponse);
+                if (authReponse != null)
+                {
+                    var claimsIdentity = authReponse.User.GenerateClaimsPrincipal();
 
-                return Ok(response.Success());
+                    await HttpContext.SignInAsync(claimsIdentity);
+
+                    response.SetData(authReponse);
+
+                    return Ok(response.Success());
+                }
+
+                return BadRequest(response.Error("Something went wrong with login"));
             }
             catch (Exception e)
             {
                 return Ok(response.Error(e.Message));
             }
+        }
+
+        [HttpPost]
+        [JwtAuthorize]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+
+            return Ok();
         }
 
         [HttpPost]

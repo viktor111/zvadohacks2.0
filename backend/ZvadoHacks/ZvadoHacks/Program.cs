@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 using ZvadoHacks.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +35,23 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+var key = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("jwtKey").Value);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false, // Change to true if you have a specific issuer
+                    ValidateAudience = false, // Change to true if you have a specific audience
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
 
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.ConfigureServices();

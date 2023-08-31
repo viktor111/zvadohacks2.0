@@ -1,4 +1,5 @@
 ﻿using Euroins.Payment.Data.Repositories;
+using System.Security.Claims;
 using ZvadoHacks.Data.Entities;
 using ZvadoHacks.Models.Auth;
 
@@ -12,7 +13,7 @@ namespace ZvadoHacks.Services
 
         public AuthService(
             IPasswordManagerService passwordManagerService,
-            IJwtTokenGeneratorService jwtTokenGeneratorService, 
+            IJwtTokenGeneratorService jwtTokenGeneratorService,
             IRepository<User> userRepository)
         {
             _passwordManagerService = passwordManagerService;
@@ -38,28 +39,28 @@ namespace ZvadoHacks.Services
 
             var token = _jwtTokenGeneratorService.GenerateToken(user);
 
-            return new AuthLoginResponse { Token = token };
+            return new AuthLoginResponse { Token = token, User = user };
         }
 
         public async Task<User> Register(AuthRegisterRequest request)
         {
             var existingUserEmail = await _userRepository.FindOne(x => x.Email == request.Email);
 
-            if(existingUserEmail is not null)
+            if (existingUserEmail is not null)
             {
                 throw new Exception("Email taken");
             }
 
             var existingUserUserame = await _userRepository.FindOne(x => x.Username == request.Username);
 
-            if(existingUserUserame is not null)
+            if (existingUserUserame is not null)
             {
                 throw new Exception("Username taken");
             }
 
             var passwordHash = _passwordManagerService.HashPassword(request.Password);
 
-            var newUser = new User() 
+            var newUser = new User()
             {
                 Email = request.Email,
                 Username = request.Username,
@@ -68,12 +69,12 @@ namespace ZvadoHacks.Services
 
             var addedUser = await _userRepository.Add(newUser);
 
-            if(addedUser is null)
+            if (addedUser is null)
             {
                 throw new Exception("User not registerd");
             }
 
             return addedUser;
-        }
+        }        
     }
 }

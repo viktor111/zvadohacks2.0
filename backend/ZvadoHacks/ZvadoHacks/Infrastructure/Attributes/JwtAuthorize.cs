@@ -2,11 +2,25 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
 public class JwtAuthorizeAttribute : Attribute, IAuthorizationFilter
 {
+    private readonly string _role;
+
+    public JwtAuthorizeAttribute(string role)
+    {
+        _role = role;
+
+    }
+
+    public JwtAuthorizeAttribute()
+    {
+        _role = "User";
+    }
+
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
@@ -23,6 +37,23 @@ public class JwtAuthorizeAttribute : Attribute, IAuthorizationFilter
         {
             context.Result = new UnauthorizedResult();
             return;
+        }
+
+        if(context.HttpContext.User.Claims.Any())
+        {
+            var roleClaim = context.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role);
+
+            if(roleClaim == null)
+            {
+                context.Result = new UnauthorizedResult();
+                return;
+            }
+
+            if (_role != "Admin" && roleClaim.Value != _role)
+            {
+                context.Result = new StatusCodeResult(403);
+                return;
+            }
         }
     }
 
