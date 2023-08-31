@@ -21,6 +21,7 @@ namespace ZvadoHacks.Controllers
         }
 
         [HttpPost]
+        [JwtAuthorize("Admin")]
         public async Task<IActionResult> Create(BlogPostCreateRequest blogPostCreateRequest)
         {
             var blogPost = await _blogPostRepository.Add(new BlogPost
@@ -69,6 +70,7 @@ namespace ZvadoHacks.Controllers
         }
 
         [HttpDelete("{id}")]
+        [JwtAuthorize("Admin")]
         public async Task<IActionResult> Delete([FromRoute] string id)
         {
             var response = new BaseResponse<BlogPost>();
@@ -88,6 +90,7 @@ namespace ZvadoHacks.Controllers
         }
 
         [HttpPatch("{id}")]
+        [JwtAuthorize("Admin")]
         public async Task<IActionResult> Update([FromRoute] string id, BlogPostUpdateRequest blogPostUpdateRequest)
         {
             var response = new BaseResponse<BlogPost>();
@@ -110,6 +113,19 @@ namespace ZvadoHacks.Controllers
             await _blogPostRepository.Update(post);
 
             return Ok(post);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Details([FromRoute] string id)
+        {
+            var response = new BaseResponse<BlogPost>();
+            var post = await _blogPostRepository.FindOne(x => x.Id == id);
+            if (post is null)
+            {
+                return NotFound(response.Error("Blog post not found"));
+            }
+            response.SetData(post);
+            return Ok(response.Success());
         }
     }
 }
